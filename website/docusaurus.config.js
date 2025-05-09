@@ -9,6 +9,7 @@ import pluginDocusaurus from 'docusaurus-plugin-typedoc';
 import logger from '@docusaurus/logger';
 
 import versions from './versions.json';
+import { fileURLToPath } from 'node:url';
 
 /* Configuration Constants */
 const organizationName = process.env.GITHUB_ORGANIZATION_NAME || 'tradingview';
@@ -17,7 +18,7 @@ const projectUrl = `https://github.com/${organizationName}/${projectName}`;
 const githubPagesUrl = `https://${organizationName}.github.io`;
 
 const cacheDir = path.resolve(
-	new URL('.', import.meta.url).pathname,
+	fileURLToPath(new URL('.', import.meta.url)),
 	'./.previous-typings-cache/'
 );
 const typedocWatch = process.env.TYPEDOC_WATCH === 'true';
@@ -175,7 +176,7 @@ function typedocPluginForVersion(version) {
 				// @ts-ignore
 				entryPoints: [getTypingsCacheFilePath(version)],
 				out: path.resolve(
-					new URL('.', import.meta.url).pathname,
+					fileURLToPath(new URL('.', import.meta.url)),
 					`./versioned_docs/version-${version}/api`
 				),
 			});
@@ -257,11 +258,10 @@ const getConfig = async () => {
 				{
 					blog: false,
 					docs: {
-						sidebarPath: new URL('./sidebars.js', import.meta.url).pathname,
+						sidebarPath: fileURLToPath(new URL('./sidebars.js', import.meta.url)),
 					},
 					theme: {
-						customCss: new URL('./src/css/custom.css', import.meta.url)
-							.pathname,
+						customCss: fileURLToPath(new URL('./src/css/custom.css', import.meta.url)),
 					},
 				},
 			],
@@ -409,8 +409,7 @@ const getConfig = async () => {
 					id: 'tutorials',
 					path: 'tutorials',
 					routeBasePath: 'tutorials',
-					sidebarPath: new URL('./sidebars-tutorials.js', import.meta.url)
-						.pathname,
+					sidebarPath: fileURLToPath(new URL('./sidebars-tutorials.js', import.meta.url)),
 				},
 			],
 			[
@@ -418,7 +417,7 @@ const getConfig = async () => {
 				{
 					...commonDocusaurusPluginTypedocConfig,
 					id: 'current-api',
-					entryPoints: ['../dist/typings.d.ts'],
+					entryPoints: [fileURLToPath(new URL('../dist/typings.d.ts', import.meta.url))],
 					watch: typedocWatch,
 					preserveWatchOutput: typedocWatch,
 				},
